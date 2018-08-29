@@ -149,7 +149,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="hitable.h" />
+    <ClInclude Include="hitableList.h" />
     <ClInclude Include="ray.h" />
+    <ClInclude Include="sphere.h" />
     <ClInclude Include="vector.h" />
   </ItemGroup>
   <ItemGroup>
