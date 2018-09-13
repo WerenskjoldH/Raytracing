@@ -176,6 +176,11 @@ namespace rn {
 		{
 			return std::sqrtf(x * x + y * y + z * z);
 		}
+
+		float squaredMagnitude()
+		{
+			return x * x + y * y + z * z;
+		}
 	};
 
 	inline vector3f unitVector(vector3f v)
@@ -361,7 +366,11 @@ namespace rn {
 		{
 			return std::sqrtf(x*x + y * y + z * z + w * w);
 		}
-	};
+		float squaredMagnitude()
+		{
+			return x*x + y * y + z * z + w * w;
+		}
+};
 
 	std::ostream& operator<<(std::ostream& os, const vector4f& v)
 	{
