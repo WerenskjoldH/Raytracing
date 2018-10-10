@@ -6,13 +6,14 @@
 class sphere : public hitable {
 public:
 	rn::vector3f center;
+	material *mat;
 	float radius;
 
 	sphere() {}
-	sphere(rn::vector3f center, float radius) :center(center), radius(radius) {}
+	sphere(rn::vector3f center, float radius, material* matPtr) :center(center), radius(radius), mat(matPtr) {}
 	~sphere() {}
 	
-	virtual bool hit(const ray& r, float tMin, float tMax, hitRecord& rec) const;
+	virtual bool hit(const ray& r, float tMin, float tMax, hitRecord& rec) const override;
 };
 
 // Note: "const" keyword prevents modification to the object who's function is called
@@ -35,6 +36,8 @@ bool sphere::hit(const ray& r, float tMin, float tMax, hitRecord& rec) const {
 			rec.p = r.pointAt(temp);
 			// This ~should~ return a unit vector out of the surface of the sphere
 			rec.normal = (rec.p - center) / radius;
+			// Returns the surface material that the ray hit
+			rec.mat = mat;
 			return true;
 		}
 		temp = (-b + sqrt(b * b - 4* a * c)) / (2*a);
@@ -43,6 +46,7 @@ bool sphere::hit(const ray& r, float tMin, float tMax, hitRecord& rec) const {
 			rec.t = temp;
 			rec.p = r.pointAt(temp);
 			rec.normal = (rec.p - center) / radius;
+			rec.mat = mat;
 			return true;
 		}
 	}

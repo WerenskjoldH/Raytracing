@@ -17,8 +17,7 @@ public:
 		origin			= rn::vector3f(0.0, 0.0, 0.0);
 	}
 
-	ray getRay(float u, float v)
-	{
+	ray getRay(float u, float v) {
 		return ray(origin, lowerLeftCorner + u * horizontal + v * vertical - origin);
 	}
 };

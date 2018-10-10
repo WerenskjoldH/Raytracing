@@ -5,7 +5,6 @@
 #include <iostream>
 
 namespace rn {
-
 	class vector3f {
 	private:
 
@@ -13,6 +12,9 @@ namespace rn {
 		float x;
 		float y;
 		float z;
+
+		// Outside function declerations
+		float dot(const vector3f& o, const vector3f& v);
 
 		// Getters/Setters
 		float r() const
@@ -77,9 +79,10 @@ namespace rn {
 			z = z / s;
 		}
 
-		float operator*(const vector3f & v) const
+		// This is NOT the dot product
+		vector3f operator*(const vector3f & v) const
 		{
-			return x * v.x + y * v.y + z * v.z;
+			return vector3f(x*v.x, y*v.y, z*v.z);
 		}
 
 		vector3f operator/(const float s) const
@@ -169,7 +172,7 @@ namespace rn {
 
 		float angleBetweenVector(vector3f & v)
 		{
-			return std::acos(v * (*this) / v.magnitude() * this->magnitude());
+			return std::acos(dot(v, (*this)) / v.magnitude() * this->magnitude());
 		}
 
 		float magnitude()
@@ -183,11 +186,6 @@ namespace rn {
 		}
 	};
 
-	inline vector3f unitVector(vector3f v)
-	{
-		return v / v.magnitude();
-	}
-
 	std::ostream& operator<<(std::ostream& os, const vector3f& v)
 	{
 		return os << v.x << " " << v.y << " " << v.z;
@@ -200,7 +198,27 @@ namespace rn {
 
 	float dot(const vector3f& o, const vector3f& v)
 	{
-		return o * v;
+		return o.x * v.x + o.y * v.y + o.z * v.z;
+	}
+
+	inline vector3f unitVector(vector3f v)
+	{
+		return v / v.magnitude();
+	}
+
+	inline vector3f reflect(const vector3f v, const vector3f n)
+	{
+		return v - 2.0f * dot(v, n) * n;
+	}
+
+	// Returns a viable direction in a unit sphere
+	inline rn::vector3f randomInUnitSphere()
+	{
+		rn::vector3f p;
+		do {
+			p = 2.0f * rn::vector3f(rand() / (RAND_MAX + 1.0), rand() / (RAND_MAX + 1.0), rand() / (RAND_MAX + 1.0)) - rn::vector3f(1,1,1);
+		} while (p.squaredMagnitude() >= 1.0f);
+		return p;
 	}
 
 	class vector4f {
@@ -211,6 +229,9 @@ namespace rn {
 		float y;
 		float z;
 		float w;
+
+		// Outside function declerations
+		float dot(const vector4f& o, const vector4f& v);
 
 		// Constructors
 		vector4f() : x(0.f), y(0.f), z(0.f), w(1.f) {};
@@ -265,9 +286,10 @@ namespace rn {
 			w = w / s;
 		}
 
-		float operator*(const vector4f & v) const
+		// This is NOT the dot product
+		vector4f operator*(const vector4f & v) const
 		{
-			return x * v.x + y * v.y + z * v.z + w * v.w;
+			return vector4f(x*v.x, y*v.y, z*v.z, w*v.w);
 		}
 
 		vector4f operator/(const float s) const
@@ -275,6 +297,7 @@ namespace rn {
 			return vector4f(x / s, y / s, z / s, w / s);
 		}
 
+		
 		vector4f operator*(const float s) const
 		{
 			return vector4f(s*x, s*y, x*z, w*z);
@@ -357,11 +380,6 @@ namespace rn {
 			(*this) = (*this).unit();
 		}
 
-		float angleBetweenVector(vector4f & v)
-		{
-			return std::acos(v * (*this) / v.magnitude() * this->magnitude());
-		}
-
 		float magnitude()
 		{
 			return std::sqrtf(x*x + y * y + z * z + w * w);
@@ -371,6 +389,11 @@ namespace rn {
 			return x*x + y * y + z * z + w * w;
 		}
 };
+
+	float dot(const vector4f& o, const vector4f& v)
+	{
+		return o.x*v.x + o.y*v.y + o.z*v.z + o.w*v.w;
+	}
 
 	std::ostream& operator<<(std::ostream& os, const vector4f& v)
 	{
